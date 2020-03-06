@@ -18,9 +18,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Run checks
       env:
-        GOPATH: /home/runner/work/kdk/go
+        GOPATH: /home/runner/work/kdk/kdk/go
       run: make checks
     - name: Build
       env:
-        GOPATH: /home/runner/work/kdk/go
+        GOPATH: /home/runner/work/kdk/kdk/go
       run: make bin-build docker-build
