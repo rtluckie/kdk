@@ -17,6 +17,10 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
     - name: Run checks
+      env:
+        GOPATH: /home/runner/work/kdk/go
       run: make checks
     - name: Build
+      env:
+        GOPATH: /home/runner/work/kdk/go
       run: make bin-build docker-build
