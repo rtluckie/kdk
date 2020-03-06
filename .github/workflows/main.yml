@@ -23,5 +23,4 @@ jobs:
     - name: Build
       env:
         GOPATH: /home/runner/work/kdk/kdk/go
-        PATH: $PATH:$GOPATH/bin
       run: make docker-build
