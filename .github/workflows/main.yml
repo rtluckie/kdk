@@ -24,4 +24,4 @@ jobs:
       env:
         GOPATH: /home/runner/work/kdk/kdk/go
         PATH: $PATH:$GOPATH/bin
-      run: make deps bin-build docker-build
+      run: make docker-build
