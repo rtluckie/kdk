@@ -16,6 +16,7 @@ package utils
 
 import (
 	"net"
+	"net/url"
 	"reflect"
 )
 
@@ -48,4 +49,16 @@ func GetPort() int {
 			return listen.Addr().(*net.TCPAddr).Port
 		}
 	}
+}
+
+func ValidUrl(input string) bool {
+	_, err := url.ParseRequestURI(input)
+	if err != nil {
+		return false
+	}
+	u, err := url.Parse(input)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		return false
+	}
+	return true
 }
