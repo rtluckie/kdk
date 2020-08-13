@@ -40,8 +40,8 @@ func init() {
 	initCmd.Flags().StringVarP(&CurrentKdkEnvConfig.ConfigFile.AppConfig.DotfilesRepo, "dotfiles-repo", "", "https://github.com/cisco-sso/yadm-dotfiles.git", "KDK Dotfiles Repo")
 	initCmd.Flags().StringVarP(&CurrentKdkEnvConfig.ConfigFile.AppConfig.Shell, "shell", "s", "/bin/bash", "KDK shell")
 	initCmd.Flags().StringVarP(&CurrentKdkEnvConfig.SocksPort, "socks-port", "D", "", "KDK SOCKS Port")
-	initCmd.Flags().StringVarP(&CurrentKdkEnvConfig.ConfigFile.AppConfig.UserProvisionScript, "user-provision-script", "u", "/usr/local/bin/provision-user", "User provision script")
-	initCmd.Flags().StringVarP(&CurrentKdkEnvConfig.ConfigFile.AppConfig.UserProvisionCommand, "user-provision-command", "c", "", "User provision command")
+	initCmd.Flags().StringVarP(&CurrentKdkEnvConfig.ConfigFile.AppConfig.ProvisionUserScript, "provision-user-script", "", "/usr/local/bin/provision-user", "Provision user script")
+	initCmd.Flags().StringSliceVarP(&CurrentKdkEnvConfig.ConfigFile.AppConfig.ProvisionUserScriptArgs, "provision-user-script-arg", "", []string{}, "Provision user script args")
 
 	rootCmd.AddCommand(initCmd)
 }

@@ -59,15 +59,15 @@ type configFile struct {
 }
 
 type AppConfig struct {
-	Name                 string
-	Port                 string
-	ImageRepository      string
-	ImageTag             string
-	DotfilesRepo         string
-	Shell                string
-	SocksPort            string
-	UserProvisionScript  string
-	UserProvisionCommand string
+	Name                    string
+	Port                    string
+	ImageRepository         string
+	ImageTag                string
+	DotfilesRepo            string
+	Shell                   string
+	SocksPort               string
+	ProvisionUserScript     string
+	ProvisionUserScriptArgs []string
 }
 
 // create docker client and context for easy reuse

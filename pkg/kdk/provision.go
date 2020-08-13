@@ -24,15 +24,17 @@ import (
 
 func Provision(cfg KdkEnvConfig) error {
 	log.Info("Starting KDK user provisioning. This may take a moment.  Hang tight...")
-	var userProvisionScript, userProvisionScriptPath, userProvisionScriptUrl, userProvisionCommand string
+	//var userProvisionScript, userProvisionScriptPath, userProvisionScriptUrl, userProvisionCommand string
+	var provisionUserScript, provisionUserScriptPath, provisionUserScriptUrl string
+	var provisionUserScriptArgs []string
+	provisionUserScriptArgs = []string{}
+	provisionUserScript = cfg.ConfigFile.AppConfig.ProvisionUserScript
+	provisionUserScriptArgs = cfg.ConfigFile.AppConfig.ProvisionUserScriptArgs
 
-	userProvisionScript = cfg.ConfigFile.AppConfig.UserProvisionScript
-	userProvisionCommand = cfg.ConfigFile.AppConfig.UserProvisionCommand
-
-	if utils.ValidUrl(cfg.ConfigFile.AppConfig.UserProvisionScript) {
+	if utils.ValidUrl(cfg.ConfigFile.AppConfig.ProvisionUserScript) {
 		log.Info("Using provision script from URL...")
-		userProvisionScriptUrl = userProvisionScript
-		userProvisionScriptPath = "/tmp/custom_user_provision"
+		provisionUserScriptUrl = provisionUserScript
+		provisionUserScriptPath = "/tmp/custom_user_provision"
 		curlCmd := "curl -Lo %[1]s %[2]s && chmod 0711 %[1]s"
 		resp, err := cfg.DockerClient.ContainerExecCreate(cfg.Ctx, cfg.ConfigFile.AppConfig.Name, types.ExecConfig{
 			User:         "root",
@@ -40,7 +42,7 @@ func Provision(cfg KdkEnvConfig) error {
 			Tty:          false,
 			AttachStderr: true,
 			AttachStdout: true,
-			Cmd:          []string{"bash", "-c", fmt.Sprintf(curlCmd, userProvisionScriptPath, userProvisionScriptUrl)},
+			Cmd:          []string{"bash", "-c", fmt.Sprintf(curlCmd, provisionUserScriptPath, provisionUserScriptUrl)},
 		})
 		if err != nil {
 			log.WithField("error", err).Fatal("Failed to create provision script exec")
@@ -52,8 +54,11 @@ func Provision(cfg KdkEnvConfig) error {
 			return err
 		}
 	} else {
-		userProvisionScriptPath = userProvisionScript
+		provisionUserScriptPath = provisionUserScript
 	}
+
+	cmd := []string{provisionUserScriptPath}
+	cmd = append(cmd, provisionUserScriptArgs...)
 
 	createResp, err := cfg.DockerClient.ContainerExecCreate(cfg.Ctx, cfg.ConfigFile.AppConfig.Name, types.ExecConfig{
 		User:         "root",
@@ -61,7 +66,7 @@ func Provision(cfg KdkEnvConfig) error {
 		Tty:          false,
 		AttachStderr: true,
 		AttachStdout: true,
-		Cmd:          []string{userProvisionScriptPath, userProvisionCommand},
+		Cmd:          cmd,
 	})
 
 	if err != nil {
